@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
             mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-            .title(meet.get(i).getDay()));
+            .title(meet.get(i).getAddress()));
         }
 
 
