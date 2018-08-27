@@ -10,12 +10,14 @@ public class DataItemMeetings {
 
     private String idNumber;
     private String day;
+    private String tod;
     private String startTime;
     private String endTime;
     private String oc;
     private String meetingName;
     private String location;
     private String address;
+    private String area;
     private String codes;
     private String lat;
     private String lng;
@@ -23,9 +25,9 @@ public class DataItemMeetings {
     public DataItemMeetings() {
     }
 
-    public DataItemMeetings(String idNumber, String day, String startTime,
+    public DataItemMeetings(String idNumber, String day, String tod,  String startTime,
                             String endTime, String oc, String meetingName,
-                            String location, String address,
+                            String location, String address, String area,
                             String codes, String lat, String lng) {
         if (idNumber == null) {
             idNumber = UUID.randomUUID().toString();
@@ -33,12 +35,14 @@ public class DataItemMeetings {
 
         this.idNumber = idNumber;
         this.day = day;
+        this.tod = tod;
         this.startTime = startTime;
         this.endTime = endTime;
         this.oc = oc;
         this.meetingName = meetingName;
         this.location = location;
         this.address = address;
+        this.area = area;
         this.codes = codes;
         this.lat = lat;
         this.lng = lng;
@@ -132,16 +136,34 @@ public class DataItemMeetings {
         this.lng = lng;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getTod() {
+        return tod;
+    }
+
+    public void setTod(String tod) {
+        this.tod = tod;
+    }
+
     public ContentValues toValues() {
         ContentValues values = new ContentValues(11);
         values.put(MeetingsTable.COLUMN_ID, idNumber);
         values.put(MeetingsTable.COLUMN_DAY, day);
+        values.put(MeetingsTable.COLUMN_TOD, tod);
         values.put(MeetingsTable.COLUMN_STARTTIME, startTime);
         values.put(MeetingsTable.COLUMN_ENDTIME, endTime);
         values.put(MeetingsTable.COLUMN_OC, oc);
         values.put(MeetingsTable.COLUMN_MEETINGNAME, meetingName);
         values.put(MeetingsTable.COLUMN_LOCATION, location);
         values.put(MeetingsTable.COLUMN_ADDRESS, address);
+        values.put(MeetingsTable.COLUMN_AREA, area);
         values.put(MeetingsTable.COLUMN_CODES, codes);
         values.put(MeetingsTable.COLUMN_LAT, lat);
         values.put(MeetingsTable.COLUMN_LNG, lng);
@@ -153,12 +175,14 @@ public class DataItemMeetings {
         return "DataItemMeetings{" +
                 "idNumber='" + idNumber + '\'' +
                 ", day='" + day + '\'' +
+                ", tod='" + tod + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", oc='" + oc + '\'' +
                 ", meetingName='" + meetingName + '\'' +
                 ", location='" + location + '\'' +
                 ", address='" + address + '\'' +
+                ", area='" + area + '\'' +
                 ", codes='" + codes + '\'' +
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +

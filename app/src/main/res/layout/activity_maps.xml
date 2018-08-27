@@ -1,9 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity" />
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/sunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sun"
+            android:textOff="Sun"
+            android:textOn="Sun"
+            android:textSize="10sp"
+            tools:textOff="Sun" />
+
+        <ToggleButton
+            android:id="@+id/monday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mon"
+            android:textOff="Mon"
+            android:textOn="Mon"
+            android:textSize="10sp"
+            tools:textOff="Mon" />
+
+        <ToggleButton
+            android:id="@+id/tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tue"
+            android:textOff="Tue"
+            android:textOn="Tue"
+            android:textSize="10sp"
+            tools:textOff="Tue" />
+
+        <ToggleButton
+            android:id="@+id/wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Wed"
+            android:textOff="Wed"
+            android:textOn="Wed"
+            android:textSize="10sp"
+            tools:textOff="Wed" />
+
+        <ToggleButton
+            android:id="@+id/thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Thu"
+            android:textOff="Thu"
+            android:textOn="Thu"
+            android:textSize="10sp"
+            tools:textOff="Thu"/>
+
+        <ToggleButton
+            android:id="@+id/friday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Fri"
+            android:textOff="Fri"
+            android:textOn="Fri"
+            android:textSize="10sp"
+            tools:textOff="Fri" />
+
+        <ToggleButton
+            android:id="@+id/saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sat"
+            android:textOff="Sat"
+            android:textOn="Sat"
+            android:textSize="10sp"
+            tools:textOff="Sat" />
+
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity" />
+
+
+</LinearLayout>

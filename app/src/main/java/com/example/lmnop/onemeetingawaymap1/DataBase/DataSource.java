@@ -20,7 +20,11 @@ public class DataSource {
     SQLiteOpenHelper mDbHelper;
 
     private String[] cols = {MeetingsTable.COLUMN_LAT, MeetingsTable.COLUMN_LNG,
-            MeetingsTable.COLUMN_MEETINGNAME, MeetingsTable.COLUMN_DAY, MeetingsTable.COLUMN_LOCATION};
+            MeetingsTable.COLUMN_DAY, MeetingsTable.COLUMN_TOD, MeetingsTable.COLUMN_STARTTIME,
+            MeetingsTable.COLUMN_ENDTIME, MeetingsTable.COLUMN_OC,
+            MeetingsTable.COLUMN_MEETINGNAME, MeetingsTable.COLUMN_LOCATION,
+            MeetingsTable.COLUMN_ADDRESS, MeetingsTable.COLUMN_AREA,
+            MeetingsTable.COLUMN_CODES};
 
 
     public DataSource(Context context) {
@@ -76,12 +80,14 @@ public class DataSource {
             DataItemMeetings item = new DataItemMeetings();
             item.setIdNumber(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_ID)));
             item.setDay(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_DAY)));
+            item.setTod(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_TOD)));
             item.setStartTime(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_STARTTIME)));
             item.setEndTime(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_ENDTIME)));
             item.setOc(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_OC)));
             item.setMeetingName(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_MEETINGNAME)));
             item.setLocation(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_LOCATION)));
             item.setAddress(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_ADDRESS)));
+            item.setArea(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_AREA)));
             item.setCodes(cursor.getString(cursor.getColumnIndex(MeetingsTable.COLUMN_CODES)));
             dataItems.add(item);
         }
@@ -111,9 +117,16 @@ public class DataSource {
         DataItemMeetings m = new DataItemMeetings();
         m.setLat(cursor.getString(0));
         m.setLng(cursor.getString(1));
-        m.setMeetingName(cursor.getString(2));
-        m.setDay(cursor.getString(3));
-        m.setAddress(cursor.getString(4));
+        m.setDay(cursor.getString(2));
+        m.setTod(cursor.getString(3));
+        m.setStartTime(cursor.getString(4));
+        m.setEndTime(cursor.getString(5));
+        m.setOc(cursor.getString(6));
+        m.setMeetingName(cursor.getString(7));
+        m.setLocation(cursor.getString(8));
+        m.setAddress(cursor.getString(9));
+        m.setArea(cursor.getString(10));
+        m.setCodes(cursor.getString(11));
         return m;
     }
 
