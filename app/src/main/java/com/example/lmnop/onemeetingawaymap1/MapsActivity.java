@@ -23,10 +23,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.sql.SQLTransactionRollbackException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.InfoWindowAdapter {
+
+    //Map of Meetings
+    HashMap<LatLng, List<DataItemMeetings>> locationMap = new HashMap<>();
 
     private static final String TAG = "maps activity";
     List<DataItemMeetings> dataItemMeetingsList = SampleDataProvider.dataItemMeetingsList;
@@ -66,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onSunday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -78,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onMonday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -90,6 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onTuesday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -102,6 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onWednesday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -114,6 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onThursday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -126,6 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onFriday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -138,6 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     onSaturday();
                 } else {
                     mMap.clear();
+                    locationMap.clear();
                     dayIsChecked();
                 }
             }
@@ -200,6 +211,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public View getInfoContents(Marker marker) {
         DataItemMeetings meetings = (DataItemMeetings) marker.getTag();
+        ArrayList<DataItemMeetings> list;
+
+        list = (ArrayList<DataItemMeetings>) locationMap.get(marker.getPosition());
         Log.d(TAG, "getInfoContents: " + meetings.getMeetingName());
         View view = getLayoutInflater().inflate(R.layout.info_window, null, true);
         TextView mn = view.findViewById(R.id.meetingName);
@@ -232,26 +246,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
 
-            if (day.equals("Sunday"))
-                if (tod.equals("Morning")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Wednesday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_sunday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_sunday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_sunday_evening)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
         }
     }
 
@@ -267,26 +301,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
 
-            if (day.equals("Monday"))
-                if (tod.equals("Morning")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Wednesday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = new DataItemMeetings();
+                    nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_monday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_monday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_monday_evening)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
         }
     }
 
@@ -302,26 +357,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
 
-            if (day.equals("Tuesday"))
-                if (tod.equals("Morning")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Wednesday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = new DataItemMeetings();
+                    nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tuesday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tuesday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_tuesday_evening)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
         }
     }
 
@@ -337,26 +413,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
 
-            if (day.equals("Wednesday"))
-                if (tod.equals("Morning")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Wednesday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = new DataItemMeetings();
+                    nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_wednesday_evening)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
         }
     }
 
@@ -372,26 +469,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
 
-            if (day.equals("Thursday"))
-                if (tod.equals("Morning")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Thursday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_thursday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_thursday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_thursday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = new DataItemMeetings();
+                    nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_thursday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_thursday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_thursday_evening)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
         }
     }
 
@@ -407,33 +525,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
 
-            if (day.equals("Friday"))
-                if (tod.equals("Morning")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Friday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = new DataItemMeetings();
+                    nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
                             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
         }
     }
 
     public void onSaturday() {
         List<DataItemMeetings> meet = mDataSource.getPins();
         for (int i = 0; i < meet.size(); i++) {
-
             String day = meet.get(i).getDay();
             String tod = meet.get(i).getTod();
             String slat = meet.get(i).getLat();
@@ -441,29 +579,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String des = meet.get(i).getDay() + " " + meet.get(i).getStartTime() + "-" + meet.get(i).getEndTime();
             double lat = Double.parseDouble(slat);
             double lng = Double.parseDouble(slng);
-
-            if (day.equals("Saturday"))
-                if (tod.equals("Morning")) {
+            // IF there is a meeting in HashMap at LatLng
+            // THEN replace marker at LatLng with new dynamically numbered icon
+            LatLng ll = new LatLng(lat, lng);
+            if (day.equals("Saturday")) {
+                if (locationMap.get(ll) == null) {
+                    List<DataItemMeetings> nl = new ArrayList<>();
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    if (tod.equals("Morning")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_saturday_morning)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Mid-Day")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_saturday_mid_day)))
+                                .setTag(meet.get(i));
+                    } else if (tod.equals("Evening")) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
+                                .title(meet.get(i).getMeetingName())
+                                .snippet(des)
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_saturday_evening)))
+                                .setTag(meet.get(i));
+                    }
+                } else if (locationMap.get(ll) != null) {
+                    List<DataItemMeetings> nl = locationMap.get(ll);
+                    nl.add(meet.get(i));
+                    locationMap.put(ll, nl);
+                    DataItemMeetings nm = new DataItemMeetings();
+                    nm = meet.get(i);
+                    nm.setMeetingName(nl.size() + "");
                     mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
                             .title(meet.get(i).getMeetingName())
                             .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_saturday_morning)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Mid-Day")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_saturday_mid_day)))
-                            .setTag(meet.get(i));
-                } else if (tod.equals("Evening")) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat))
-                            .title(meet.get(i).getMeetingName())
-                            .snippet(des)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_saturday_evening)))
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_friday_evening)))
                             .setTag(meet.get(i));
                 }
+            }
+            //else create normal meeting tag and add it to HashMap
+
+
+
         }
     }
+
 }
 
 
