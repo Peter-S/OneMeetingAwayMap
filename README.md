@@ -8,17 +8,17 @@ We created onboard SQLite database for offline use and integrated Google maps SD
 
 Users will be able to open this app and see an array of meetings in their vicinity by using the MapView.
 
-#### Opening Screen
+### Opening Screen
 The app opens to a map of the users current location
 
 ![Screenshot](pictures/pic1.PNG "Before day is selected")
 
-#### Selecting a day to attend a meeting
+### Selecting a day to attend a meeting
 Once a day is selected, in this case Friday, markers show the location of the meetings and if it is in the morning, mid-day or eveming
 
 ![Screenshot](pictures/pic2.PNG "After selecting Friday for a meeting")
 
-#### Zooming in and selecting a meeting
-The users can zoom in, select a meeting, and the details for the meeting pop up.
+### Zooming in and selecting a meeting
+The users can zoom in, select a meeting, and the details for the meeting pops up. The user can also user Google get directions arrow
 ![Screenshot](pictures/pic3.PNG "Details of a meeting in Belltown")
 
